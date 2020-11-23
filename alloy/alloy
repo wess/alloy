@@ -1,0 +1,15 @@
+#
+# alloy
+# 
+# Author: Wess Cope (you@you.you)
+# Created: 11/19/2020
+# 
+# Copywrite (c) 2020 Wess.io
+#
+
+#!/usr/bin/env bash
+
+export ALLOY_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export PATH="${ALLOY_ROOT}:${PATH}"
+
+source ${ALLOY_ROOT}/__main.sh

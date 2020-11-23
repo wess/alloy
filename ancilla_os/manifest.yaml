@@ -1,0 +1,11 @@
+name: ancilla
+description: Operating system a go go.
+version: 0.0.1
+
+settings:
+  boot:
+    image: assets/splash_screen.png
+
+  wpa:
+    ssid: Not connected.
+    password: Ca5h1134!
