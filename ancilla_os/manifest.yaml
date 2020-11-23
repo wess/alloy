@@ -4,8 +4,12 @@ version: 0.0.1
 
 settings:
   boot:
+    enable_ssh: yes
     image: assets/splash_screen.png
 
   wpa:
-    ssid: Not connected.
-    password: Ca5h1134!
+    update_config: 1
+    country: US
+    network:
+      ssid: Not connected.
+      password: Ca5h1134!

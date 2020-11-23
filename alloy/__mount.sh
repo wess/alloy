@@ -109,5 +109,37 @@ img_unmount() {
 
   detach_loopback $IMG_FILE
   murder_children
+}
 
+img_shrink() {
+  echo -e "Compressing disk image..." | status
+
+  start=$( fdisk -lu $IMG | grep Linux | awk '{print $2}' )
+  size=$(( $( fdisk -lu $IMG | grep Linux | awk '{print $3 }' ) * 1024 ))
+
+  LD=$(losetup -f -P --show ${IMG_FILE})
+
+  trap 'losetup -d $LD' EXIT
+
+  echo -e "Checking partition..." | status
+  e2fsck -fy ${LD}p2
+
+  padding=$( resize2fs -P /dev/loop2 2>/dev/null | grep '^Estimated' | awk -F : '{print $2 + 50000}' )
+
+  echo -e "Resizing partition..." | status
+  resize2fs ${LD}p2 $padding
+  e2fsck -f ${LD}p2
+
+  new_size=$( dumpe2fs /dev/loop2 2>/dev/null | grep '^Block count:' | awk '{print $3}' )
+  t_news=$(( $P_NEWSIZE ))
+  new_size=$(( T_NEWS ))
+  new_end=$(( $P_START + ($P_NEWSIZE * 8) + 1 )) # in 512 byte sectors
+
+  trap - EXIT
+
+  echo -e "p\nd\n2\nn\np\n2\n$P_START\n$P_NEWEND\np\nw\n" | fdisk $IMG
+
+  image_size=$((($new_end + 1) * 512))
+
+  truncate -s $image_size $IMG_FILE
 }

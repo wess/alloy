@@ -44,7 +44,6 @@ COPY ancilla_os /ancilla_os
 
 WORKDIR /alloy
 
-ENV BUILD_DIR=/build
 ENV DEBIAN_FRONTEND=dialog
 ENV PATH=/alloy:${PATH}
 

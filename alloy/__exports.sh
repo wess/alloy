@@ -17,6 +17,8 @@ set_env_vars() {
     export ROOT_DIR="${BUILD_DIR}"
   fi
 
+  echo "Root directory: ${ROOT_DIR}" | info
+  
   export IMG_DIR="${ROOT_DIR}/image"
   export ASSET_DIR="${ROOT_DIR}/assets"
   export IGNORE_FILE="${ROOT_DIR}/.gitignore"
