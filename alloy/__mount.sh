@@ -30,6 +30,14 @@ restore_ld() {
   fi
 }
 
+detach() {
+  for img in $(losetup  | grep $1 | awk '{ print $1 }' );  do
+    if [[ -f $img ]]; then
+    	losetup -d $img
+    fi
+  done
+}
+
 _has_image() {
   if [ ! -f "${IMG_FILE}" ]; then
     echo "No Raspberry Pi OS image found (${IMG_FILE})" | error
@@ -39,29 +47,31 @@ _has_image() {
 
 img_mount() {
   detach_loopback $IMG_FILE
-
-  echo -e "Mounting image ${IMG_FILE} at ${MOUNT_DIR}..." | status
+  detach $IMG_FILE
 
   _has_image
 
-  echo -e "Adding additional space to image..." | status
-  dd if=/dev/zero bs=1M count=2048 >> ${IMG_FILE}
+  echo -e "Mounting image ${IMG_FILE} at ${MOUNT_DIR}..." | status
 
-  echo -e "Setting up loop device..." | status
-  LD=$(losetup -f -P --show ${IMG_FILE})
 
-  trap 'losetup -d $LD' EXIT
+  # echo -e "Adding additional space to image..." | status
+  # dd if=/dev/zero bs=1M count=2048 >> ${IMG_FILE}
 
-  echo -e "Expanding rootfs partition..." | status
-  growpart $LD 2
+  # echo -e "Setting up loop device..." | status
+  # LD=$(losetup -f -P --show ${IMG_FILE})
 
-  echo -e "Checking rootfs partition..." | status
-  e2fsck -fy ${LD}p2
+  # trap 'losetup -d $LD' EXIT
 
-  echo -e "Resizing rootfs partition..." | status
-  resize2fs -p ${LD}p2
+  # echo -e "Expanding rootfs partition..." | status
+  # growpart $LD 2
 
-  trap - EXIT
+  # echo -e "Checking rootfs partition..." | status
+  # e2fsck -fy ${LD}
+
+  # echo -e "Resizing rootfs partition..." | status
+  # resize2fs -p ${LD}
+
+  # trap - EXIT
 
   boot_partition=1
   root_partition=2
@@ -86,6 +96,7 @@ img_mount() {
   mkdir -p $MOUNT_DIR/dev/pts
   mount -o bind /dev $MOUNT_DIR/dev
   mount -o bind /dev/pts $MOUNT_DIR/dev/pts
+  mount -o bind /proc $MOUNT_DIR/proc
 }
 
 
@@ -95,6 +106,7 @@ img_unmount() {
     force=$2
   fi
 
+  sync
   if [ -n "$force" ]; then
     for process in $(lsof $MOUNT_DIR | awk '{print $2}'); do
       kill -9 $process
@@ -103,7 +115,7 @@ img_unmount() {
   fi
 
   for m in $(mount | grep $MOUNT_DIR | awk -F " on " '{print $2}' | awk '{print $1}' | sort -r); do
-    umount $m
+    umount $m < /dev/null
     echo "Unmounted $m..." | success
   done
 
@@ -122,7 +134,7 @@ img_shrink() {
   trap 'losetup -d $LD' EXIT
 
   echo -e "Checking partition..." | status
-  e2fsck -fy ${LD}p2
+  e2fsck -fy ${LD}
 
   padding=$( resize2fs -P /dev/loop2 2>/dev/null | grep '^Estimated' | awk -F : '{print $2 + 50000}' )
 

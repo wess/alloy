@@ -18,3 +18,5 @@ quit() {
   echo >&2 "$@"
   exit 1
 }
+
+define(){ IFS='\n' read -r -d '' ${1} || true; }

@@ -32,19 +32,19 @@ RUN apt-get update && \
     cloud-guest-utils \
     python3-pip \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && pip install niet
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN dpkg-reconfigure dash
 RUN sed -i "s/^# en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen && locale-gen && update-locale LANG=en_US.UTF-8
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-COPY ancilla_os /ancilla_os
+COPY example /alloy_os
 
 WORKDIR /alloy
 
+ENV TERM xterm-256color
 ENV DEBIAN_FRONTEND=dialog
 ENV PATH=/alloy:${PATH}
 
-ENTRYPOINT [ "zsh" ]
+CMD ["/bin/bash"]

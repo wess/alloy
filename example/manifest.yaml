@@ -1,0 +1,11 @@
+name: alloy
+description: Your description here
+version: 0.0.1
+
+boot:
+  splash: assets/splash_screen.png
+
+enable:
+  ssh: yes
+  wpa: no
+

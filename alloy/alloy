@@ -12,4 +12,26 @@
 export ALLOY_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export PATH="${ALLOY_ROOT}:${PATH}"
 
-source ${ALLOY_ROOT}/__main.sh
+source ${ALLOY_ROOT}/__echo.sh
+source ${ALLOY_ROOT}/__helpers.sh
+
+CMD=$1
+shift
+
+if [ "$CMD" == "create" ]; then
+  source ${ALLOY_ROOT}/__create.sh
+  exit 0
+fi
+
+if [ "$CMD" == "build" ]; then
+  source ${ALLOY_ROOT}/__build.sh
+  exit 0
+fi
+
+echo "Invalid command." | error
+echo ""
+echo "Available commands:"
+echo "------------------------"
+echo "create - To create a new alloy project in given directory (deffaults to current directory"
+echo "build - Builds a new image"
+echo ""

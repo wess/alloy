@@ -76,36 +76,36 @@ cyan() {
 
 success() {
   while read data; do
-    echo -e "${GREEN}${CHECK_MARK} $data"
+    echo -e "${GREEN}${CHECK_MARK} $data${COLOR_RESET}"
   done
 }
 
 warning() {
   while read data; do
-    echo -e "${YELLOW}${WARNING_MARK} $data"
+    echo -e "${YELLOW}${WARNING_MARK} $data${COLOR_RESET}"
   done
 }
 
 error() {
   while read data; do
-    echo -e "${RED}${CROSS_MARK} $data"
+    echo -e "${RED}${CROSS_MARK} $data${COLOR_RESET}"
   done
 }
 
 muted() {
   while read data; do
-    echo -e "${DARK_GRAY}${CIRCLE_MARK} $data"
+    echo -e "${DARK_GRAY}${CIRCLE_MARK} $data${COLOR_RESET}"
   done
 }
 
 info() {
   while read data; do
-    echo -e "${CYAN}${INFO_MARK} $data"
+    echo -e "${BLUE}${INFO_MARK} $data${COLOR_RESET}"
   done
 }
 
 status() {
   while read data; do
-    echo -e "${COLOR_RESET}${ARROW_MARK} $data"
+    echo -e "${COLOR_RESET}${CYAN}${ARROW_MARK} $data${COLOR_RESET}"
   done
 }
