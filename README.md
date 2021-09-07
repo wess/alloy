@@ -1,4 +1,7 @@
-# Ancilla OS
+# Alloy
+> Alloy is a nice little setup for generating, down to the boot/spash screen, custom raspberry pi images.
+
+*** THIS IS NOT CLOSE TO READY, But i do appreciate the interest ***
 
 
 ### WPA Options/setup
